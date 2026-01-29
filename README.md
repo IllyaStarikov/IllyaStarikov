@@ -1,4 +1,7 @@
-[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=F7F7F7&width=435&lines=Hello.+%F0%9F%91%8B+I'm+Illya.;%D0%9F%D1%80%D0%B8%D0%B2%D1%96%D1%82.+%F0%9F%91%8B+%D0%AF+%D0%86%D0%BB%D0%BB%D1%8F.+%F0%9F%87%BA%F0%9F%87%A6)](https://git.io/typing-svg)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=FFFFFF&width=435&lines=Hello.+%F0%9F%91%8B+I'm+Illya.;%D0%9F%D1%80%D0%B8%D0%B2%D1%96%D1%82.+%F0%9F%91%8B+%D0%AF+%D0%86%D0%BB%D0%BB%D1%8F.+%F0%9F%87%BA%F0%9F%87%A6" />
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=000000&width=435&lines=Hello.+%F0%9F%91%8B+I'm+Illya.;%D0%9F%D1%80%D0%B8%D0%B2%D1%96%D1%82.+%F0%9F%91%8B+%D0%AF+%D0%86%D0%BB%D0%BB%D1%8F.+%F0%9F%87%BA%F0%9F%87%A6" />
+</picture>
 
 Software Engineer who spends too much time messing with AI/ML, infinitely tweaking [dotfiles](https://github.com/IllyaStarikov/.dotfiles) (btw I use Vim), and occasionally solving real-world problems with software. In my free time I enjoy [reading](https://starikov.co/books/), video games, tea, and hanging out with my fiance and cats.
 
