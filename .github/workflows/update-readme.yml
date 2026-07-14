@@ -26,9 +26,7 @@ jobs:
         run: python3 src/fetch_stats.py
 
       - name: Render SVGs
-        run: |
-          python3 src/generate_svg.py
-          python3 src/generate_greeting.py
+        run: python3 src/generate_svg.py
 
       - name: Commit refreshed card
         run: |
