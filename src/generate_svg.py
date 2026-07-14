@@ -229,7 +229,7 @@ def render(P, stats, art_text, cmap_text=None):
     body_rows = max(len(art), len(info) + 4)  # info + strip below info column
     info_col_x = PAD_X + (ART_COLS + GAP_COLS) * CW
 
-    total_rows = 1 + 1 + body_rows + 1
+    total_rows = 1 + 1 + body_rows
     width = round(PAD_X * 2 + TOTAL_COLS * CW)
     height = round(TITLE_H + PAD_TOP + total_rows * LH + PAD_BOT)
 
@@ -286,16 +286,6 @@ def render(P, stats, art_text, cmap_text=None):
         y = row_y(strip_row) - FS + r * sh
         out.append(f'<rect x="{x:.1f}" y="{y:.1f}" width="{sw:.1f}" '
                    f'height="{sh:.1f}" fill="{P["ansi"][j]}"/>')
-
-    # final prompt with blinking cursor
-    last = total_rows - 1
-    out.append(text_el(PAD_X, row_y(last), [("❯ ", P["green"])]))
-    cx = PAD_X + 2 * CW
-    cy = row_y(last) - FS + 1
-    out.append(f'<rect x="{cx:.1f}" y="{cy:.1f}" width="{CW:.1f}" height="{FS + 2}" '
-               f'fill="{P["fg"]}"><animate attributeName="opacity" '
-               f'values="1;1;0;0" keyTimes="0;0.5;0.5;1" dur="1.1s" '
-               f'repeatCount="indefinite"/></rect>')
 
     out.append("</svg>")
     return "\n".join(out)
