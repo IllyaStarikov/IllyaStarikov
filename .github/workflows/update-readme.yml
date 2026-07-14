@@ -1,0 +1,52 @@
+name: update readme
+
+on:
+  schedule:
+    - cron: "23 9 * * *"   # daily, off the top-of-hour rush
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [src/**]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch stats
+        env:
+          # Fine-grained PAT (secret README_TOKEN) sees private-repo counts;
+          # falls back to GITHUB_TOKEN which covers public data only.
+          GH_TOKEN: ${{ secrets.README_TOKEN || secrets.GITHUB_TOKEN }}
+        run: python3 src/fetch_stats.py
+
+      - name: Render SVGs
+        run: |
+          python3 src/generate_svg.py
+          python3 src/generate_greeting.py
+
+      - name: Commit refreshed card
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets src/stats.json src/loc_cache.json
+          git diff --cached --quiet && echo "nothing changed" && exit 0
+          git commit -m "readme: refresh stats"
+          git push
+
+      # Andrew6rant's cron died silently in 2025 and nobody noticed for a year.
+      # If this workflow fails, open an issue so it can't rot quietly.
+      - name: Alert on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "README update failed ($(date -u +%F))" \
+            --body "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            || true

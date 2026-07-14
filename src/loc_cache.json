@@ -1,0 +1,134 @@
+{
+  "IllyaStarikov/resume-radix": {
+    "head": "dc061eebadcafa7bd197403950bb787da62c095f",
+    "add": 7840,
+    "del": 4938,
+    "commits": 184
+  },
+  "IllyaStarikov/.dotfiles": {
+    "head": "48e283d71db35d1db37fa4349dee73a017dd0794",
+    "add": 2053891,
+    "del": 2042578,
+    "commits": 940
+  },
+  "IllyaStarikov/skeleton-files": {
+    "head": "22651cdf2648304ce65c7a9194930587ad545be5",
+    "add": 178,
+    "del": 3,
+    "commits": 13
+  },
+  "IllyaStarikov/resume": {
+    "head": "7e39b0200a5a4fbe290051c995a0f9886d8bd1a7",
+    "add": 4579,
+    "del": 2292,
+    "commits": 33
+  },
+  "IllyaStarikov/academia": {
+    "head": "7c0b521e4e3fac251058bb257bf153a1e6b916a7",
+    "add": 3602978,
+    "del": 126257,
+    "commits": 449
+  },
+  "IllyaStarikov/starikov-dot-co": {
+    "head": "266fc91956ff861ec2522914b835e7677bb10e64",
+    "add": 254171,
+    "del": 105507,
+    "commits": 435
+  },
+  "IllyaStarikov/colosseum": {
+    "head": "38f00e52fdfd9a5eb66facfc76d78b8ca547b702",
+    "add": 17283,
+    "del": 3648,
+    "commits": 123
+  },
+  "IllyaStarikov/starikov.io": {
+    "head": "35b33f3f74bc8f57f721e86c8ca83886dc82ddcd",
+    "add": 114,
+    "del": 28,
+    "commits": 11
+  },
+  "IllyaStarikov/economister": {
+    "head": "3e5ed5a6650712ae6c2e1a21de4263575e3d3742",
+    "add": 4434,
+    "del": 198,
+    "commits": 2
+  },
+  "IllyaStarikov/.dotfiles.private": {
+    "head": "31b5294f9ada9d752fe5a174db8cd897170894fe",
+    "add": 28865,
+    "del": 16237,
+    "commits": 113
+  },
+  "IllyaStarikov/field-notes": {
+    "head": "d3d4440d938dcbfa97e5542cce717851e4143a5d",
+    "add": 2254297,
+    "del": 335103,
+    "commits": 193
+  },
+  "IllyaStarikov/artificial": {
+    "head": "f6a186bdd0393191bd1a443ba665188f6df7d95d",
+    "add": 23028,
+    "del": 6573,
+    "commits": 32
+  },
+  "IllyaStarikov/IllyaStarikov": {
+    "head": "800d24d1b893684bb152975aa4de492d70d5f35a",
+    "add": 74,
+    "del": 62,
+    "commits": 7
+  },
+  "IllyaStarikov/productivity": {
+    "head": "722a6862191e0c2cc3be0266a44cb73060b05a13",
+    "add": 3127,
+    "del": 3,
+    "commits": 6
+  },
+  "IllyaStarikov/omnifocus-mcp": {
+    "head": "9f90958673c518c43dab94538b5457861c8fb6cd",
+    "add": 15434,
+    "del": 886,
+    "commits": 37
+  },
+  "IllyaStarikov/readwise-mcp": {
+    "head": "85ad31017d5b0baf3fa471b987b64c3aedb9245d",
+    "add": 11365,
+    "del": 337,
+    "commits": 20
+  },
+  "IllyaStarikov/intervyou": {
+    "head": "0faa401b65b72a3325e81e7658fe0d2db2cc6025",
+    "add": 177,
+    "del": 0,
+    "commits": 2
+  },
+  "IllyaStarikov/ghost-cache-purge": {
+    "head": "e4ac39306ba783e40d4550573f2f0d3b68daa379",
+    "add": 1634,
+    "del": 0,
+    "commits": 1
+  },
+  "IllyaStarikov/skills": {
+    "head": "95886aeef4b9989aac512837db8fa73929e32c47",
+    "add": 1698,
+    "del": 0,
+    "commits": 2
+  },
+  "IllyaStarikov/services": {
+    "head": "493a9a8a25e6e9e3399343ab4042471e99dcb286",
+    "add": 4293,
+    "del": 0,
+    "commits": 2
+  },
+  "IllyaStarikov/bin": {
+    "head": "de833c8b8299f4b8390d4b0245b63139cee9d2a0",
+    "add": 474,
+    "del": 0,
+    "commits": 1
+  },
+  "IllyaStarikov/eclecta": {
+    "head": "ef4de799d1253aa268c627837834ea933be95a2a",
+    "add": 147388,
+    "del": 16342,
+    "commits": 86
+  }
+}
