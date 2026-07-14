@@ -229,7 +229,7 @@ def render(P, stats, art_text, cmap_text=None):
     body_rows = max(len(art), len(info) + 4)  # info + strip below info column
     info_col_x = PAD_X + (ART_COLS + GAP_COLS) * CW
 
-    total_rows = 1 + 1 + body_rows
+    total_rows = body_rows
     width = round(PAD_X * 2 + TOTAL_COLS * CW)
     height = round(TITLE_H + PAD_TOP + total_rows * LH + PAD_BOT)
 
@@ -259,26 +259,22 @@ def render(P, stats, art_text, cmap_text=None):
     y0 = TITLE_H + PAD_TOP + LH  # baseline of first row
     row_y = lambda r: y0 + r * LH
 
-    # ❯ neofetch command line
-    out.append(text_el(PAD_X, row_y(0),
-                       [("❯ ", P["green"]), ("neofetch", P["fg"])]))
-
     # art (left column): own tighter line grid, vertically centered in body
-    body_top = row_y(2) - FS
-    body_h = (body_rows - 2) * LH
+    body_top = row_y(0) - FS
+    body_h = body_rows * LH
     art_h = len(art) * LH_ART
     art_y0 = body_top + max(0, (body_h - art_h) / 2) + FS
     for i, segs in enumerate(art):
         if segs:
             out.append(text_el(PAD_X, art_y0 + i * LH_ART, segs))
 
-    # info (right column), starting row 2
+    # info (right column)
     for i, segs in enumerate(info):
         if segs:
-            out.append(text_el(info_col_x, row_y(2 + i), segs))
+            out.append(text_el(info_col_x, row_y(i), segs))
 
     # color strip below info
-    strip_row = 2 + len(info) + 1
+    strip_row = len(info) + 1
     sw, sh = CW * 3, LH * 0.9
     for j in range(16):
         r, c = divmod(j, 8)
