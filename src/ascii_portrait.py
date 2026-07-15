@@ -1,26 +1,53 @@
 #!/usr/bin/env python3
-"""Convert a photo crop to ASCII art tuned for a dark-background SVG README."""
+"""Convert a photo to ASCII art tuned for a dark-background SVG README.
+
+TODO (adopt): use YOUR OWN photo -- this step is hand-work, there is no
+one-size recipe. Remove the background and matte the subject onto black
+first (see src/README.md), then tune --contrast/--gamma/--sharpen until
+the face reads. Emits portrait.txt (glyphs) + portrait.colors (hues).
+"""
+
 from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 
 RESAMPLE = Image.Resampling.LANCZOS
 
-# Character ramps, dark -> light (dark background: light pixels get dense glyphs)
+# Character ramps, dark -> light (on a dark background, the brightest
+# pixels get the densest glyphs).
 RAMPS = {
     "short": " .:-=+*#%@",
-    "medium": " .'`^\",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$",
-    "classic": "`.-':_,^=;><+!rc*/z?sLTv)J7(|Fi{C}fI31tlu[neoZ5Yxjya]2ESwqkP6h9d4VpOGbUAKXHm8RD#$Bg0MNWQ%&@",
+    "medium": (
+        " .'`^\",:;Il!i><~+_-?][}{1)(|\\/tfjrx"
+        "nuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"
+    ),
+    "classic": (
+        "`.-':_,^=;><+!rc*/z?sLTv)J7(|Fi{C}fI31tlu[neo"
+        "Z5Yxjya]2ESwqkP6h9d4VpOGbUAKXHm8RD#$Bg0MNWQ%&@"
+    ),
     "blocky": " .:;+=xX$&@",
 }
 
 
-def to_ascii(img_path, cols=52, char_aspect=0.5, ramp="medium", contrast=1.0,
-             brightness=1.0, gamma=1.0, sharpen=False, invert=False,
-             autocontrast_cutoff=None):
+def to_ascii(
+    img_path,
+    cols=52,
+    char_aspect=0.5,
+    ramp="medium",
+    contrast=1.0,
+    brightness=1.0,
+    gamma=1.0,
+    sharpen=False,
+    invert=False,
+    autocontrast_cutoff=None,
+):
+    """Map pixel brightness to a glyph ramp -> ASCII lines (on a dark
+    card, bright pixels get the densest glyphs)."""
     img = Image.open(img_path).convert("L")
     if autocontrast_cutoff is not None:
         img = ImageOps.autocontrast(img, cutoff=autocontrast_cutoff)
     if sharpen:
-        img = img.filter(ImageFilter.UnsharpMask(radius=2, percent=120, threshold=2))
+        img = img.filter(
+            ImageFilter.UnsharpMask(radius=2, percent=120, threshold=2)
+        )
     if contrast != 1.0:
         img = ImageEnhance.Contrast(img).enhance(contrast)
     if brightness != 1.0:
@@ -41,15 +68,17 @@ def to_ascii(img_path, cols=52, char_aspect=0.5, ramp="medium", contrast=1.0,
         for x in range(cols):
             v = px[x, y] / 255.0
             if gamma != 1.0:
-                v = v ** gamma
+                v = v**gamma
             line.append(chars[min(n - 1, int(v * n))])
         lines.append("".join(line).rstrip())
     return "\n".join(lines)
 
 
 def color_labels(img_path, cols, rows, sat_floor=0.18, dark_floor=0.16):
-    """Per-cell color class: r,o,y,g,c,b,m hues or 0/1/2 neutral shades, '.' empty."""
+    """Per-cell color class: r,o,y,g,c,b,m hues, 0/1/2 neutral shades,
+    or '.' for empty."""
     import colorsys
+
     img = Image.open(img_path).convert("RGB").resize((cols, rows), RESAMPLE)
     px = img.load()
     grid = []
@@ -85,21 +114,25 @@ def color_labels(img_path, cols, rows, sat_floor=0.18, dark_floor=0.16):
         grid.append(row)
     # 3x3 mode filter to kill speckle (empties stay empty)
     from collections import Counter
+
     out = [row[:] for row in grid]
     for y in range(rows):
         for x in range(cols):
             if grid[y][x] == ".":
                 continue
-            neigh = [grid[ny][nx]
-                     for ny in range(max(0, y - 1), min(rows, y + 2))
-                     for nx in range(max(0, x - 1), min(cols, x + 2))
-                     if grid[ny][nx] != "."]
+            neigh = [
+                grid[ny][nx]
+                for ny in range(max(0, y - 1), min(rows, y + 2))
+                for nx in range(max(0, x - 1), min(cols, x + 2))
+                if grid[ny][nx] != "."
+            ]
             out[y][x] = Counter(neigh).most_common(1)[0][0]
     return "\n".join("".join(row) for row in out)
 
 
 if __name__ == "__main__":
     import argparse
+
     p = argparse.ArgumentParser()
     p.add_argument("image")
     p.add_argument("--cols", type=int, default=52)
@@ -112,11 +145,22 @@ if __name__ == "__main__":
     p.add_argument("--invert", action="store_true")
     p.add_argument("--autocontrast", type=float, default=None)
     p.add_argument("--out", default=None)
-    p.add_argument("--colors-out", default=None,
-                   help="also write per-cell color-class map")
+    p.add_argument(
+        "--colors-out", default=None, help="also write per-cell color-class map"
+    )
     a = p.parse_args()
-    art = to_ascii(a.image, a.cols, a.aspect, a.ramp, a.contrast, a.brightness,
-                   a.gamma, a.sharpen, a.invert, a.autocontrast)
+    art = to_ascii(
+        a.image,
+        a.cols,
+        a.aspect,
+        a.ramp,
+        a.contrast,
+        a.brightness,
+        a.gamma,
+        a.sharpen,
+        a.invert,
+        a.autocontrast,
+    )
     if a.out:
         with open(a.out, "w") as f:
             f.write(art + "\n")
@@ -125,9 +169,12 @@ if __name__ == "__main__":
         cmap = color_labels(a.image, a.cols, rows)
         # blank cells in art must be blank in colormap
         cmap = "\n".join(
-            "".join("." if (x >= len(al) or al[x] == " ") else cl[x]
-                    for x in range(len(cl)))
-            for al, cl in zip(art.split("\n"), cmap.split("\n")))
+            "".join(
+                "." if (x >= len(al) or al[x] == " ") else cl[x]
+                for x in range(len(cl))
+            )
+            for al, cl in zip(art.split("\n"), cmap.split("\n"))
+        )
         with open(a.colors_out, "w") as f:
             f.write(cmap + "\n")
     print(art)

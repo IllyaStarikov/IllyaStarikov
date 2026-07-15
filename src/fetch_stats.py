@@ -5,13 +5,14 @@ Uses `gh api graphql` locally (the Action later uses GITHUB_TOKEN via requests).
 Outputs stats.json with: uptime source date, repos, contributed, stars,
 commits (all-time), followers, loc_add, loc_del, per-repo cache.
 """
+
 import json
 import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-USER = "IllyaStarikov"
+USER = "IllyaStarikov"  # TODO: change to your GitHub username
 HERE = Path(__file__).parent
 CACHE = HERE / "loc_cache.json"
 
@@ -40,10 +41,19 @@ def base_stats():
           nodes {
             nameWithOwner
             stargazerCount
-            defaultBranchRef { target { ... on Commit { history(first: 0) { totalCount } oid } } }
+            defaultBranchRef {
+              target {
+                ... on Commit { history(first: 0) { totalCount } oid }
+              }
+            }
           }
         }
-        repositoriesContributedTo(first: 100, contributionTypes: [COMMIT, PULL_REQUEST, REPOSITORY, PULL_REQUEST_REVIEW]) {
+        repositoriesContributedTo(
+          first: 100
+          contributionTypes: [
+            COMMIT, PULL_REQUEST, REPOSITORY, PULL_REQUEST_REVIEW
+          ]
+        ) {
           totalCount
         }
       }
@@ -52,7 +62,8 @@ def base_stats():
 
 
 def commits_all_time(created_at):
-    """Sum contributionsCollection commit counts year-by-year since account creation."""
+    """Sum contributionsCollection commit counts year-by-year, since
+    account creation."""
     q = """
     query($login: String!, $from: DateTime!, $to: DateTime!) {
       user(login: $login) {
@@ -68,8 +79,11 @@ def commits_all_time(created_at):
     year = start
     while year < now:
         year_end = min(year.replace(year=year.year + 1), now)
-        cc = gql(q, login=USER,
-                 **{"from": year.isoformat(), "to": year_end.isoformat()})
+        cc = gql(
+            q,
+            login=USER,
+            **{"from": year.isoformat(), "to": year_end.isoformat()},
+        )
         cc = cc["user"]["contributionsCollection"]
         total_public += cc["totalCommitContributions"]
         total_restricted += cc["restrictedContributionsCount"]
@@ -133,8 +147,11 @@ def main():
         loc_add += result["add"]
         loc_del += result["del"]
         my_commits_on_branches += result["commits"]
-        print(f"  {nwo}: +{result['add']:,} -{result['del']:,} "
-              f"({result['commits']} commits)", file=sys.stderr)
+        print(
+            f"  {nwo}: +{result['add']:,} -{result['del']:,} "
+            f"({result['commits']} commits)",
+            file=sys.stderr,
+        )
 
     public_commits, restricted_commits = commits_all_time(user["createdAt"])
 

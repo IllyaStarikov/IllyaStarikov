@@ -7,6 +7,7 @@ no external fetches (GitHub camo-safe). Text sits on an exact character grid;
 every segment gets an explicit x so columns stay aligned even if the embedded
 font fails and a fallback monospace kicks in.
 """
+
 import base64
 import json
 from datetime import datetime, timezone
@@ -16,39 +17,88 @@ HERE = Path(__file__).parent
 
 # ---------------------------------------------------------------- palettes --
 # TokyoNight Storm / Day, from folke/tokyonight.nvim kitty extras.
+# TODO: swap in another theme's hex values here if you don't want TokyoNight.
 STORM = {
     "name": "storm",
-    "bg": "#24283b", "bg_dark": "#1f2335", "fg": "#c0caf5", "fg_dim": "#a9b1d6",
-    "muted": "#565f89", "border": "#1d202f",
-    "red": "#f7768e", "green": "#9ece6a", "yellow": "#e0af68", "blue": "#7aa2f7",
-    "magenta": "#bb9af7", "cyan": "#7dcfff", "orange": "#ff9e64",
-    "ansi": ["#1d202f", "#f7768e", "#9ece6a", "#e0af68", "#7aa2f7", "#bb9af7",
-             "#7dcfff", "#a9b1d6", "#414868", "#ff899d", "#9fe044", "#faba4a",
-             "#8db0ff", "#c7a9ff", "#a4daff", "#c0caf5"],
+    "bg": "#24283b",
+    "bg_dark": "#1f2335",
+    "fg": "#c0caf5",
+    "fg_dim": "#a9b1d6",
+    "muted": "#565f89",
+    "border": "#1d202f",
+    "red": "#f7768e",
+    "green": "#9ece6a",
+    "yellow": "#e0af68",
+    "blue": "#7aa2f7",
+    "magenta": "#bb9af7",
+    "cyan": "#7dcfff",
+    "orange": "#ff9e64",
+    "ansi": [
+        "#1d202f",
+        "#f7768e",
+        "#9ece6a",
+        "#e0af68",
+        "#7aa2f7",
+        "#bb9af7",
+        "#7dcfff",
+        "#a9b1d6",
+        "#414868",
+        "#ff899d",
+        "#9fe044",
+        "#faba4a",
+        "#8db0ff",
+        "#c7a9ff",
+        "#a4daff",
+        "#c0caf5",
+    ],
     # silver ramp so hue-mapped clothing pops against neutral skin
     "art": ["#414868", "#a9b1d6", "#c0caf5"],
 }
 DAY = {
     "name": "day",
-    "bg": "#e1e2e7", "bg_dark": "#d0d5e3", "fg": "#3760bf", "fg_dim": "#6172b0",
-    "muted": "#848cb5", "border": "#b4b5b9",
-    "red": "#f52a65", "green": "#587539", "yellow": "#8c6c3e", "blue": "#2e7de9",
-    "magenta": "#9854f1", "cyan": "#007197", "orange": "#b15c00",
-    "ansi": ["#b4b5b9", "#f52a65", "#587539", "#8c6c3e", "#2e7de9", "#9854f1",
-             "#007197", "#6172b0", "#a1a6c5", "#ff4774", "#5c8524", "#a27629",
-             "#358aff", "#a463ff", "#007ea8", "#3760bf"],
+    "bg": "#e1e2e7",
+    "bg_dark": "#d0d5e3",
+    "fg": "#3760bf",
+    "fg_dim": "#6172b0",
+    "muted": "#848cb5",
+    "border": "#b4b5b9",
+    "red": "#f52a65",
+    "green": "#587539",
+    "yellow": "#8c6c3e",
+    "blue": "#2e7de9",
+    "magenta": "#9854f1",
+    "cyan": "#007197",
+    "orange": "#b15c00",
+    "ansi": [
+        "#b4b5b9",
+        "#f52a65",
+        "#587539",
+        "#8c6c3e",
+        "#2e7de9",
+        "#9854f1",
+        "#007197",
+        "#6172b0",
+        "#a1a6c5",
+        "#ff4774",
+        "#5c8524",
+        "#a27629",
+        "#358aff",
+        "#a463ff",
+        "#007ea8",
+        "#3760bf",
+    ],
     # light bg: dense glyphs need DARK ink, sparse glyphs light
     "art": ["#a8aecb", "#6172b0", "#2e3c64"],
 }
 
 # ------------------------------------------------------------------ layout --
-FS = 13                      # font size px
-CW = FS * 0.6                # Fira Code advance = 0.6em exactly
-LH = round(FS * 1.28)        # info line height px
-LH_ART = 14                  # art line height px (tighter: keeps density)
-ART_ASPECT = CW / LH_ART     # feed to ascii_portrait --aspect
-PAD_X = 24                   # inner padding
-PAD_TOP = 16                 # below title bar
+FS = 13  # font size px
+CW = FS * 0.6  # Fira Code advance = 0.6em exactly
+LH = round(FS * 1.28)  # info line height px
+LH_ART = 14  # art line height px (tighter: keeps density)
+ART_ASPECT = CW / LH_ART  # feed to ascii_portrait --aspect
+PAD_X = 24  # inner padding
+PAD_TOP = 16  # below title bar
 PAD_BOT = 20
 TITLE_H = 40
 ART_COLS = 52
@@ -56,11 +106,13 @@ GAP_COLS = 4
 INFO_COLS = 62
 TOTAL_COLS = ART_COLS + GAP_COLS + INFO_COLS
 
-RAMP = " .'`^\",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"
+RAMP = (
+    " .'`^\",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"
+)
 
 
 def esc(s):
-    return (s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
 # ------------------------------------------------------------- info content --
@@ -72,7 +124,9 @@ def fmt_uptime(created_at, now=None):
     days = now.day - start.day
     if days < 0:
         months -= 1
-        prev_month_end = (now.replace(day=1) - __import__("datetime").timedelta(days=1))
+        prev_month_end = now.replace(day=1) - __import__("datetime").timedelta(
+            days=1
+        )
         days += prev_month_end.day
     if months < 0:
         years -= 1
@@ -100,8 +154,11 @@ def build_info(stats, P):
         if ndots < 2:  # too long: no leader, single space
             row = [(" " * indent, val), (k, key), (" ", val)] + segments
             return row
-        return ([(" " * indent, val)] if indent else []) + [
-            (k, key), (" ", val), ("·" * ndots, dot), (" ", val)] + segments
+        return (
+            ([(" " * indent, val)] if indent else [])
+            + [(k, key), (" ", val), ("·" * ndots, dot), (" ", val)]
+            + segments
+        )
 
     def rule(label=None):
         if not label:
@@ -111,8 +168,17 @@ def build_info(stats, P):
         return [(pre, mut), (label, acc), (" ", val), ("─" * rest, mut)]
 
     rows = []
-    rows.append([("illya", grn), ("@", mut), ("starikov", grn), (" ", val),
-                 ("─" * (INFO_COLS - len("illya@starikov ")), mut)])
+    # TODO: every row below is personal -- change the labels and values
+    # (name, OS, editor, keyboards, languages, contact, ...) to your own.
+    rows.append(
+        [
+            ("illya", grn),
+            ("@", mut),
+            ("starikov", grn),
+            (" ", val),
+            ("─" * (INFO_COLS - len("illya@starikov ")), mut),
+        ]
+    )
     rows.append(kv("OS:", [("macOS", val), (", ", mut), ("Linux", val)]))
     rows.append(kv("Uptime (github):", fmt_uptime(stats["created_at"])))
     rows.append(kv("Host:", "Google"))
@@ -120,23 +186,41 @@ def build_info(stats, P):
     rows.append(kv("Shell:", [("zsh", val), (", ", mut), ("tmux", val)]))
     rows.append(kv("IDE:", [("Neovim", val), (" (btw)", mut)]))
     rows.append(kv("Terminal:", "WezTerm"))
-    rows.append(kv("Keyboard.1:", [("Keychron Q10 Max", val),
-                                   (" (Alice, QMK)", mut), (", ", mut),
-                                   ("Jupiter Browns", val)]))
-    rows.append(kv("Keyboard.2:", [("CODE V3 87-Key", val), (", ", mut),
-                                   ("Cherry MX Clears", val)]))
+    rows.append(
+        kv(
+            "Keyboard.1:",
+            [
+                ("Keychron Q10 Max", val),
+                (" (Alice, QMK)", mut),
+                (", ", mut),
+                ("Jupiter Browns", val),
+            ],
+        )
+    )
+    rows.append(
+        kv(
+            "Keyboard.2:",
+            [("CODE V3 87-Key", val), (", ", mut), ("Cherry MX Clears", val)],
+        )
+    )
     rows.append(kv("Baud Rate:", "110 WPM"))
     rows.append(kv("First Boot:", "age 4"))
     rows.append([])
     rows.append(kv("Languages.Programming:", [("Python, C++, Shell", val)]))
     rows.append(kv("Languages.Markup:", "HTML, LaTeX, Markdown, Regex"))
-    rows.append(kv("Languages.Human:", [("English", val), (", ", mut),
-                                        ("Українська", val)]))
+    rows.append(
+        kv(
+            "Languages.Human:",
+            [("English", val), (", ", mut), ("Українська", val)],
+        )
+    )
     rows.append([])
     rows.append(kv("Hobbies.Analog:", "tea, camping, reading, cats"))
     rows.append([])
     rows.append(rule("Contact"))
-    rows.append(kv("Email:", [("illya", val), ("@", mut), ("starikov.co", val)]))
+    rows.append(
+        kv("Email:", [("illya", val), ("@", mut), ("starikov.co", val)])
+    )
     rows.append(kv("Website:", [("https://starikov.co", cyn)]))
     rows.append(kv("LinkedIn:", "illyastarikov"))
     rows.append(kv("GitHub:", "IllyaStarikov"))
@@ -146,19 +230,31 @@ def build_info(stats, P):
     rows.append(kv("Stars:", [("★ ", yel), (n(stats["stars"]), yel)]))
     rows.append(kv("Commits:", [(n(stats["commits_total"]), val)]))
     rows.append(kv("Followers:", [(n(stats["followers"]), val)]))
-    rows.append(kv("Lines of Code:", [(n(stats["loc_net"]), val), (" (", mut),
-                                      ("+" + n(stats["loc_add"]), grn),
-                                      (" / ", mut),
-                                      ("-" + n(stats["loc_del"]), red),
-                                      (")", mut)]))
+    rows.append(
+        kv(
+            "Lines of Code:",
+            [
+                (n(stats["loc_net"]), val),
+                (" (", mut),
+                ("+" + n(stats["loc_add"]), grn),
+                (" / ", mut),
+                ("-" + n(stats["loc_del"]), red),
+                (")", mut),
+            ],
+        )
+    )
     return rows
 
 
 # --------------------------------------------------------------- svg pieces --
 def font_face():
-    b64 = base64.b64encode((HERE / "art" / "fira_subset.woff2").read_bytes()).decode()
-    return (f"@font-face{{font-family:'FiraCodeSub';"
-            f"src:url(data:font/woff2;base64,{b64}) format('woff2');}}")
+    b64 = base64.b64encode(
+        (HERE / "art" / "fira_subset.woff2").read_bytes()
+    ).decode()
+    return (
+        f"@font-face{{font-family:'FiraCodeSub';"
+        f"src:url(data:font/woff2;base64,{b64}) format('woff2');}}"
+    )
 
 
 def text_el(x_px, y_px, segments):
@@ -168,7 +264,9 @@ def text_el(x_px, y_px, segments):
     for txt, color in segments:
         if txt:
             sx = x_px + col * CW
-            parts.append(f'<tspan x="{sx:.1f}" fill="{color}">{esc(txt)}</tspan>')
+            parts.append(
+                f'<tspan x="{sx:.1f}" fill="{color}">{esc(txt)}</tspan>'
+            )
         col += len(txt)
     if not parts:
         return ""
@@ -182,10 +280,18 @@ def art_rows(art_text, P, cmap_text=None):
     neutral shades. Without: 3-shade mapping by glyph density.
     """
     shades = P["art"]
-    label_color = {"r": P["red"], "o": P["orange"], "y": P["yellow"],
-                   "g": P["green"], "c": P["cyan"], "b": P["blue"],
-                   "m": P["magenta"], "0": shades[0], "1": shades[1],
-                   "2": shades[2]}
+    label_color = {
+        "r": P["red"],
+        "o": P["orange"],
+        "y": P["yellow"],
+        "g": P["green"],
+        "c": P["cyan"],
+        "b": P["blue"],
+        "m": P["magenta"],
+        "0": shades[0],
+        "1": shades[1],
+        "2": shades[2],
+    }
     art_lines = art_text.rstrip("\n").split("\n")
     cmap_lines = cmap_text.rstrip("\n").split("\n") if cmap_text else None
 
@@ -235,26 +341,43 @@ def render(P, stats, art_text, cmap_text=None):
 
     out = []
     out.append(
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" '
+        f'height="{height}" '
         f'viewBox="0 0 {width} {height}" role="img" '
-        f'aria-label="neofetch-style profile card for Illya Starikov">')
-    out.append(f"<style>{font_face()}"
-               f".t{{font-family:'FiraCodeSub','Fira Code',Menlo,Consolas,'DejaVu Sans Mono',monospace;"
-               f"font-size:{FS}px;white-space:pre;}}</style>")
+        f'aria-label="neofetch-style profile card for Illya Starikov">'
+    )
+    out.append(
+        f"<style>{font_face()}"
+        f".t{{font-family:'FiraCodeSub','Fira Code',Menlo,Consolas,"
+        f"'DejaVu Sans Mono',monospace;"
+        f"font-size:{FS}px;white-space:pre;}}</style>"
+    )
     # window
-    out.append(f'<rect x="1" y="1" width="{width-2}" height="{height-2}" rx="12" '
-               f'fill="{P["bg"]}" stroke="{P["border"]}" stroke-width="1.5"/>')
+    out.append(
+        f'<rect x="1" y="1" width="{width-2}" height="{height-2}" rx="12" '
+        f'fill="{P["bg"]}" stroke="{P["border"]}" stroke-width="1.5"/>'
+    )
     # title bar
-    out.append(f'<clipPath id="win"><rect x="1" y="1" width="{width-2}" '
-               f'height="{height-2}" rx="12"/></clipPath>')
-    out.append(f'<g clip-path="url(#win)">'
-               f'<rect x="0" y="0" width="{width}" height="{TITLE_H}" fill="{P["bg_dark"]}"/></g>')
+    out.append(
+        f'<clipPath id="win"><rect x="1" y="1" width="{width-2}" '
+        f'height="{height-2}" rx="12"/></clipPath>'
+    )
+    out.append(
+        f'<g clip-path="url(#win)">'
+        f'<rect x="0" y="0" width="{width}" height="{TITLE_H}" '
+        f'fill="{P["bg_dark"]}"/></g>'
+    )
     for i, c in enumerate(("#ff5f57", "#febc2e", "#28c840")):
-        out.append(f'<circle cx="{26 + i * 22}" cy="{TITLE_H / 2}" r="6.5" fill="{c}"/>')
-    title = "illya@starikov: ~"
+        out.append(
+            f'<circle cx="{26 + i * 22}" cy="{TITLE_H / 2}" '
+            f'r="6.5" fill="{c}"/>'
+        )
+    title = "illya@starikov: ~"  # TODO: change to your user@host
     tx = width / 2 - len(title) * CW / 2
-    out.append(f'<text y="{TITLE_H / 2 + FS * 0.36}" class="t">'
-               f'<tspan x="{tx:.1f}" fill="{P["muted"]}">{esc(title)}</tspan></text>')
+    out.append(
+        f'<text y="{TITLE_H / 2 + FS * 0.36}" class="t">'
+        f'<tspan x="{tx:.1f}" fill="{P["muted"]}">{esc(title)}</tspan></text>'
+    )
 
     y0 = TITLE_H + PAD_TOP + LH  # baseline of first row
     row_y = lambda r: y0 + r * LH
@@ -280,8 +403,10 @@ def render(P, stats, art_text, cmap_text=None):
         r, c = divmod(j, 8)
         x = info_col_x + c * sw
         y = row_y(strip_row) - FS + r * sh
-        out.append(f'<rect x="{x:.1f}" y="{y:.1f}" width="{sw:.1f}" '
-                   f'height="{sh:.1f}" fill="{P["ansi"][j]}"/>')
+        out.append(
+            f'<rect x="{x:.1f}" y="{y:.1f}" width="{sw:.1f}" '
+            f'height="{sh:.1f}" fill="{P["ansi"][j]}"/>'
+        )
 
     out.append("</svg>")
     return "\n".join(out)

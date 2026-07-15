@@ -1,0 +1,16 @@
+# Tooling config for the devfetch card generator.
+# Line length is 80 everywhere; CI enforces it (see .github/workflows/ci.yml).
+
+[tool.black]
+line-length = 80
+
+[tool.ruff]
+line-length = 80
+
+[tool.ruff.lint]
+# E501 = line too long; F = pyflakes (unused imports, undefined names, ...).
+select = ["E501", "F"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
