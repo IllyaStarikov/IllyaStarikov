@@ -24,10 +24,10 @@ jobs:
       - name: Install dependencies
         run: pip install pillow ruff black pytest
 
-      - name: Lint (ruff: line-length 80 + pyflakes)
+      - name: Lint (ruff, line-length 80 + pyflakes)
         run: ruff check src tests
 
-      - name: Format check (black: line-length 80)
+      - name: Format check (black, line-length 80)
         run: black --check src tests
 
       - name: Tests
