@@ -6,10 +6,10 @@
     "commits": 184
   },
   "IllyaStarikov/.dotfiles": {
-    "head": "48e283d71db35d1db37fa4349dee73a017dd0794",
-    "add": 2053891,
-    "del": 2042578,
-    "commits": 940
+    "head": "990391bd126c1ca9dce2cb59358a716b7005692f",
+    "add": 2055159,
+    "del": 2043615,
+    "commits": 949
   },
   "IllyaStarikov/skeleton-files": {
     "head": "22651cdf2648304ce65c7a9194930587ad545be5",
@@ -72,7 +72,7 @@
     "commits": 32
   },
   "IllyaStarikov/IllyaStarikov": {
-    "head": "a2b600f91de37c4aba06491fd53058d11d2b84b5",
+    "head": "8845c7245729833b6af70c0bc6b56f809e325c40",
     "add": 1383,
     "del": 361,
     "commits": 12
