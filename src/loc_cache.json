@@ -6,10 +6,10 @@
     "commits": 184
   },
   "IllyaStarikov/.dotfiles": {
-    "head": "d8de51262478bd548f6bc4e77f42f25972272f86",
-    "add": 2076292,
-    "del": 2048125,
-    "commits": 984
+    "head": "f274559e029dadecd1c3f18f6e62a40730f5587f",
+    "add": 2076334,
+    "del": 2048153,
+    "commits": 986
   },
   "IllyaStarikov/skeleton-files": {
     "head": "22651cdf2648304ce65c7a9194930587ad545be5",
@@ -42,10 +42,10 @@
     "commits": 123
   },
   "IllyaStarikov/starikov.io": {
-    "head": "e79c4ec73738af3a70a264aeba4fd705fa667761",
-    "add": 15523,
-    "del": 64,
-    "commits": 23
+    "head": "529f62465c783587d8af545e6c5c0219610c647b",
+    "add": 33162,
+    "del": 537,
+    "commits": 51
   },
   "IllyaStarikov/economister": {
     "head": "3e5ed5a6650712ae6c2e1a21de4263575e3d3742",
@@ -72,7 +72,7 @@
     "commits": 32
   },
   "IllyaStarikov/IllyaStarikov": {
-    "head": "869ee5de7daa83ac9c7255373db6a88a1ac14869",
+    "head": "1760a8073197ee600e957c8d42c33a22ded08317",
     "add": 2074,
     "del": 462,
     "commits": 15
@@ -126,9 +126,9 @@
     "commits": 1
   },
   "IllyaStarikov/eclecta": {
-    "head": "e16f0aac7f71c066993f01f57a061ff8bd1ffa79",
-    "add": 378621,
-    "del": 50900,
-    "commits": 130
+    "head": "2841d0b3940249ef1959f7830474dbaf11f1c582",
+    "add": 379881,
+    "del": 51077,
+    "commits": 135
   }
 }
