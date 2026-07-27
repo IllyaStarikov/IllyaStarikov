@@ -42,10 +42,10 @@
     "commits": 123
   },
   "IllyaStarikov/starikov.io": {
-    "head": "22680a71253ce5cf2aef46df6b17dd5c2e5a4c85",
-    "add": 33761,
-    "del": 597,
-    "commits": 53
+    "head": "bb3d5beb5baf6523468db4b6400dcea7c003c594",
+    "add": 39024,
+    "del": 1130,
+    "commits": 82
   },
   "IllyaStarikov/economister": {
     "head": "3e5ed5a6650712ae6c2e1a21de4263575e3d3742",
@@ -72,7 +72,7 @@
     "commits": 32
   },
   "IllyaStarikov/IllyaStarikov": {
-    "head": "511d290a7d959edabd9f81ec8c4c1f22a8e9b312",
+    "head": "7b8731e6532c47ada1d945c22091eb552ea951e9",
     "add": 2074,
     "del": 462,
     "commits": 15
@@ -126,7 +126,7 @@
     "commits": 1
   },
   "IllyaStarikov/eclecta": {
-    "head": "32c9131127f9cd8d9e72104992bb16d9269bacc2",
+    "head": "491d7d245da07edc462af6bca5d4182531e1777b",
     "add": 379881,
     "del": 51077,
     "commits": 135
