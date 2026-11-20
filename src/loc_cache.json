@@ -6,10 +6,10 @@
     "commits": 184
   },
   "IllyaStarikov/.dotfiles": {
-    "head": "f274559e029dadecd1c3f18f6e62a40730f5587f",
-    "add": 2076334,
-    "del": 2048153,
-    "commits": 986
+    "head": "e8f7644288181784a8b366122d0f03b080d7fa0d",
+    "add": 2076582,
+    "del": 2048410,
+    "commits": 987
   },
   "IllyaStarikov/skeleton-files": {
     "head": "22651cdf2648304ce65c7a9194930587ad545be5",
@@ -72,7 +72,7 @@
     "commits": 32
   },
   "IllyaStarikov/IllyaStarikov": {
-    "head": "6b6fee11e5f05efff95de927d8ea0e1482f747f5",
+    "head": "1c94335ff6ec1c16f382e2a9baf9724ff0a51afe",
     "add": 2074,
     "del": 462,
     "commits": 15
@@ -126,7 +126,7 @@
     "commits": 1
   },
   "IllyaStarikov/eclecta": {
-    "head": "6bfe9752a6a1434f3df006731959651c8d962672",
+    "head": "6120efe2fa3513908a1ac83f4dea94c5e83fc4a6",
     "add": 379945,
     "del": 51079,
     "commits": 136
